@@ -1,4 +1,3 @@
-# Re-export Base and mixins for Alembic migration discovery
 from app.common.models.base import Base, TimestampMixin
 from app.common.models.tenant import TenantMixin
 

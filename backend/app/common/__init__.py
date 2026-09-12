@@ -1,0 +1,1 @@
+# Common architectural foundations package
