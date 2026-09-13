@@ -1,5 +1,14 @@
-# Re-export Base and mixins for Alembic migration discovery
+# Re-export Base, mixins, and domain models for Alembic migration discovery
 from app.common.models.base import Base, TimestampMixin
 from app.common.models.tenant import TenantMixin
+from app.modules.tenants.models import Tenant
+from app.modules.users.models import User, UserRole
 
-__all__ = ["Base", "TimestampMixin", "TenantMixin"]
+__all__ = [
+    "Base",
+    "TimestampMixin",
+    "TenantMixin",
+    "Tenant",
+    "User",
+    "UserRole",
+]
