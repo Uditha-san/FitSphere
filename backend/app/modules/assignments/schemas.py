@@ -20,6 +20,15 @@ class CoachClientAssignmentUpdate(BaseModel):
     is_active: Optional[bool] = Field(None, description="Set to false to deactivate assignment")
 
 
+class UserSummary(BaseModel):
+    id: str
+    email: str
+    full_name: Optional[str] = None
+    role: str
+
+    model_config = ConfigDict(from_attributes=True)
+
+
 class CoachClientAssignmentRead(BaseModel):
     id: str
     tenant_id: str
@@ -28,5 +37,8 @@ class CoachClientAssignmentRead(BaseModel):
     is_active: bool
     created_at: datetime
     updated_at: datetime
+    coach: Optional[UserSummary] = None
+    client: Optional[UserSummary] = None
 
     model_config = ConfigDict(from_attributes=True)
+
