@@ -104,6 +104,12 @@ class RoleChecker:
         return current_user
 
 
+def require_roles(*allowed_roles: Union[UserRole, str]) -> RoleChecker:
+    """Helper returning a RoleChecker dependency for the specified roles."""
+    return RoleChecker(list(allowed_roles))
+
+
 require_super_admin = RoleChecker([UserRole.SUPER_ADMIN])
 require_gym_admin = RoleChecker([UserRole.SUPER_ADMIN, UserRole.GYM_ADMIN])
 require_coach = RoleChecker([UserRole.SUPER_ADMIN, UserRole.GYM_ADMIN, UserRole.COACH])
+

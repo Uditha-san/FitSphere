@@ -8,6 +8,8 @@ from app.common.services.base import BaseService
 from app.modules.tenants.models import Tenant
 from app.modules.tenants.repository import TenantRepository, tenant_repository
 from app.modules.tenants.schemas import TenantCreate, TenantUpdate
+from app.modules.users.models import User, UserRole
+
 
 RESERVED_SLUGS = {
     "admin",
@@ -65,8 +67,16 @@ class TenantService(BaseService[Tenant, TenantRepository]):
 
         return candidate_slug
 
-    def create(self, db: Session, *, obj_in: TenantCreate) -> Tenant:
+    def create(
+        self, db: Session, *, obj_in: TenantCreate, acting_user: Optional[User] = None
+    ) -> Tenant:
         """Create a new Tenant with a validated, unique slug."""
+        if acting_user and acting_user.role != UserRole.SUPER_ADMIN.value:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Operation not permitted: only super_admin may create tenants",
+            )
+
         slug = self.generate_slug(db, name=obj_in.name, custom_slug=obj_in.slug)
         create_data = obj_in.model_dump(exclude={"slug"})
         create_data["slug"] = slug
@@ -78,9 +88,18 @@ class TenantService(BaseService[Tenant, TenantRepository]):
         normalized = self.normalize_slug_text(slug)
         return self.repository.get_by_slug(db, normalized)
 
-    def update(self, db: Session, *, id: str, obj_in: TenantUpdate) -> Optional[Tenant]:
+    def update(
+        self, db: Session, *, id: str, obj_in: TenantUpdate, acting_user: Optional[User] = None
+    ) -> Optional[Tenant]:
         """Update a tenant. Slug is preserved unless explicitly provided."""
+        if acting_user and acting_user.role != UserRole.SUPER_ADMIN.value:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Operation not permitted: only super_admin may update tenant details",
+            )
+
         tenant = self.get(db, id=id)
+
         if not tenant:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
