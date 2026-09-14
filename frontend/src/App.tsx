@@ -3,8 +3,11 @@ import type { HealthResponse } from './types/api'
 import { apiService } from './services/api'
 import MainLayout from './layouts/MainLayout'
 import DevDashboard from './features/dashboard'
+import AssignmentsView from './features/assignments/AssignmentsView'
+import { AuthProvider } from './context/AuthContext'
 
-export default function App() {
+function AppContent() {
+  const [activeTab, setActiveTab] = useState<'assignments' | 'health'>('assignments')
   const [health, setHealth] = useState<HealthResponse | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [lastChecked, setLastChecked] = useState<string>('')
@@ -30,12 +33,29 @@ export default function App() {
   }, [checkHealth])
 
   return (
-    <MainLayout loading={loading} onRefresh={checkHealth}>
-      <DevDashboard
-        health={health}
-        lastChecked={lastChecked}
-        apiError={apiError}
-      />
+    <MainLayout
+      loading={loading}
+      onRefresh={checkHealth}
+      activeTab={activeTab}
+      onSelectTab={setActiveTab}
+    >
+      {activeTab === 'assignments' ? (
+        <AssignmentsView />
+      ) : (
+        <DevDashboard
+          health={health}
+          lastChecked={lastChecked}
+          apiError={apiError}
+        />
+      )}
     </MainLayout>
+  )
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
   )
 }
