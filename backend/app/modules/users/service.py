@@ -40,8 +40,34 @@ class UserService(BaseService[User, UserRepository]):
                     detail=f"Tenant with ID '{tenant_id}' does not exist"
                 )
 
-    def create(self, db: Session, *, obj_in: UserCreate) -> User:
+    def create(
+        self, db: Session, *, obj_in: UserCreate, acting_user: Optional[User] = None
+    ) -> User:
         """Create a new user with password hashing and invariant enforcement."""
+        if acting_user:
+            if acting_user.role in [UserRole.CLIENT.value, UserRole.COACH.value]:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Operation not permitted for your user role: clients and coaches cannot create users",
+                )
+            elif acting_user.role == UserRole.GYM_ADMIN.value:
+                # gym_admin can only create coach or client accounts
+                if obj_in.role not in [UserRole.COACH, UserRole.CLIENT]:
+                    raise HTTPException(
+                        status_code=status.HTTP_403_FORBIDDEN,
+                        detail="gym_admin may only create coach or client accounts",
+                    )
+                # gym_admin cannot create user in another tenant
+                if obj_in.tenant_id and obj_in.tenant_id != acting_user.tenant_id:
+                    raise HTTPException(
+                        status_code=status.HTTP_403_FORBIDDEN,
+                        detail="Cross-tenant user creation forbidden: gym_admin can only create users in their own gym",
+                    )
+                # Force user to belong to gym_admin's tenant
+                obj_in.tenant_id = acting_user.tenant_id
+            elif acting_user.role == UserRole.SUPER_ADMIN.value:
+                pass
+
         normalized_email = self.normalize_email(obj_in.email)
 
         # Check global email uniqueness
@@ -74,9 +100,15 @@ class UserService(BaseService[User, UserRepository]):
         return self.repository.get_by_email(db, email=self.normalize_email(email))
 
     def update(
-        self, db: Session, *, id: str, obj_in: Union[UserUpdate, Dict[str, Any]], tenant_id: Optional[str] = None
+        self,
+        db: Session,
+        *,
+        id: str,
+        obj_in: Union[UserUpdate, Dict[str, Any]],
+        tenant_id: Optional[str] = None,
+        acting_user: Optional[User] = None,
     ) -> Optional[User]:
-        """Safely update user details."""
+        """Safely update user details with privilege escalation defenses."""
         user = self.get(db, id=id, tenant_id=tenant_id)
         if not user:
             raise HTTPException(
@@ -88,6 +120,41 @@ class UserService(BaseService[User, UserRepository]):
             update_data = obj_in.copy()
         else:
             update_data = obj_in.model_dump(exclude_unset=True)
+
+        if acting_user:
+            if acting_user.role in [UserRole.CLIENT.value, UserRole.COACH.value]:
+                if acting_user.id != user.id:
+                    raise HTTPException(
+                        status_code=status.HTTP_403_FORBIDDEN,
+                        detail="Operation not permitted: you may only modify your own profile",
+                    )
+                if "role" in update_data or "tenant_id" in update_data or "is_active" in update_data:
+                    raise HTTPException(
+                        status_code=status.HTTP_403_FORBIDDEN,
+                        detail="Privilege escalation forbidden: cannot alter role, tenant, or active status",
+                    )
+            elif acting_user.role == UserRole.GYM_ADMIN.value:
+                if user.tenant_id != acting_user.tenant_id:
+                    raise HTTPException(
+                        status_code=status.HTTP_403_FORBIDDEN,
+                        detail="Cross-tenant modification forbidden",
+                    )
+                if "tenant_id" in update_data and update_data["tenant_id"] != user.tenant_id:
+                    raise HTTPException(
+                        status_code=status.HTTP_403_FORBIDDEN,
+                        detail="Cannot alter tenant association",
+                    )
+                if "role" in update_data:
+                    target_role = update_data["role"]
+                    if isinstance(target_role, UserRole):
+                        target_role = target_role.value
+                    if target_role in [UserRole.SUPER_ADMIN.value, UserRole.GYM_ADMIN.value]:
+                        raise HTTPException(
+                            status_code=status.HTTP_403_FORBIDDEN,
+                            detail="gym_admin cannot promote users to admin roles",
+                        )
+            elif acting_user.role == UserRole.SUPER_ADMIN.value:
+                pass
 
         # If updating password, hash it and remove plaintext
         if "password" in update_data and update_data["password"]:
