@@ -93,9 +93,13 @@ class AssignmentApiService {
     return response.json()
   }
 
-  async listUsers(params: { tenant_id?: string } = {}, token: string): Promise<User[]> {
+  async listUsers(
+    params: { tenant_id?: string; role?: string } = {},
+    token: string
+  ): Promise<User[]> {
     const query = new URLSearchParams()
     if (params.tenant_id) query.set('tenant_id', params.tenant_id)
+    if (params.role) query.set('role', params.role)
 
     const url = `${this.baseUrl}/api/v1/users/${query.toString() ? `?${query.toString()}` : ''}`
     const response = await fetch(url, {

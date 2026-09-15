@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import {
-  Dumbbell,
   Calendar,
   TrendingUp,
   PlaySquare,
@@ -18,6 +17,7 @@ import CoachDashboard from './features/dashboard/CoachDashboard'
 import ClientDashboard from './features/dashboard/ClientDashboard'
 import SuperAdminDashboard from './features/dashboard/SuperAdminDashboard'
 import AssignmentsView from './features/assignments/AssignmentsView'
+import TrainingPlansView from './features/training-plans/TrainingPlansView'
 import DevToolsView from './features/dev/DevToolsView'
 import FeaturePlaceholder from './features/common/FeaturePlaceholder'
 
@@ -59,13 +59,7 @@ function MainApp() {
         return <DevToolsView />
 
       case 'workouts':
-        return (
-          <FeaturePlaceholder
-            title="Workouts & Training Plans"
-            description="Design comprehensive training splits, customize exercise sets & reps, and assign personalized workout routines to athletes."
-            icon={<Dumbbell className="h-8 w-8" />}
-          />
-        )
+        return <TrainingPlansView />
 
       case 'schedule':
         return (
