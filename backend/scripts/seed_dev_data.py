@@ -19,6 +19,12 @@ from app.core.security import get_password_hash
 from app.modules.tenants.models import Tenant
 from app.modules.users.models import User, UserRole
 from app.modules.assignments.models import CoachClientAssignment
+from app.modules.training_plans.models import (
+    TrainingPlan,
+    WorkoutDay,
+    WorkoutExercise,
+    PlanStatus,
+)
 
 
 def seed_database():
@@ -138,6 +144,118 @@ def seed_database():
             print(f"  [+] Created Assignment: Coach Mike -> Client Alex ({assignment.id})")
         else:
             print(f"  [*] Existing active assignment verified: Coach Mike -> Client Alex")
+
+        # 4. Seed Sample Training Plan (Coach Mike -> Client Alex)
+        plan_name = "8-Week Hypertrophy & Power Split"
+        existing_plan = (
+            db.query(TrainingPlan)
+            .filter(
+                TrainingPlan.coach_id == coach_mike.id,
+                TrainingPlan.client_id == client_alex.id,
+                TrainingPlan.name == plan_name,
+            )
+            .first()
+        )
+
+        if not existing_plan:
+            plan = TrainingPlan(
+                tenant_id=tenant.id,
+                coach_id=coach_mike.id,
+                client_id=client_alex.id,
+                name=plan_name,
+                description="Periodized strength and hypertrophy training routine targeting upper body pushing power and back density.",
+                status=PlanStatus.ACTIVE.value,
+            )
+            db.add(plan)
+            db.flush()
+
+            # Day 1: Push
+            day1 = WorkoutDay(
+                training_plan_id=plan.id,
+                tenant_id=tenant.id,
+                name="Day 1: Push - Chest & Shoulders",
+                description="Focus on horizontal and vertical pressing power with progressive overload",
+                day_number=1,
+                order_index=0,
+            )
+            db.add(day1)
+            db.flush()
+
+            db.add_all([
+                WorkoutExercise(
+                    workout_day_id=day1.id,
+                    tenant_id=tenant.id,
+                    exercise_name="Barbell Bench Press",
+                    description="Standard flat bench compound movement",
+                    sets=4,
+                    repetitions="8-10",
+                    rest_seconds=90,
+                    notes="Control 2-second eccentric phase",
+                    order_index=0,
+                ),
+                WorkoutExercise(
+                    workout_day_id=day1.id,
+                    tenant_id=tenant.id,
+                    exercise_name="Incline Dumbbell Press",
+                    description="Targeting clavicular head of pectoralis major",
+                    sets=3,
+                    repetitions="10-12",
+                    rest_seconds=60,
+                    notes="30-degree incline, deep stretch",
+                    order_index=1,
+                ),
+                WorkoutExercise(
+                    workout_day_id=day1.id,
+                    tenant_id=tenant.id,
+                    exercise_name="Standing Cable Lateral Raises",
+                    description="Isolating middle deltoids",
+                    sets=4,
+                    repetitions="12-15",
+                    rest_seconds=45,
+                    notes="Smooth motion without swinging",
+                    order_index=2,
+                ),
+            ])
+
+            # Day 2: Pull
+            day2 = WorkoutDay(
+                training_plan_id=plan.id,
+                tenant_id=tenant.id,
+                name="Day 2: Pull - Back & Biceps",
+                description="Upper back thickness, lat width, and elbow flexor hypertrophy",
+                day_number=2,
+                order_index=1,
+            )
+            db.add(day2)
+            db.flush()
+
+            db.add_all([
+                WorkoutExercise(
+                    workout_day_id=day2.id,
+                    tenant_id=tenant.id,
+                    exercise_name="Conventional Deadlift",
+                    description="Posterior chain strength and hip hinge",
+                    sets=4,
+                    repetitions="6",
+                    rest_seconds=120,
+                    notes="Keep lats engaged and bar tight to shins",
+                    order_index=0,
+                ),
+                WorkoutExercise(
+                    workout_day_id=day2.id,
+                    tenant_id=tenant.id,
+                    exercise_name="Wide-Grip Lat Pulldown",
+                    description="Vertical pulling for latissimus dorsi",
+                    sets=3,
+                    repetitions="10",
+                    rest_seconds=60,
+                    notes="Drive elbows down toward hips",
+                    order_index=1,
+                ),
+            ])
+            print(f"  [+] Created Sample Plan: {plan.name} with 2 workout days and 5 exercises")
+        else:
+            print(f"  [*] Existing active plan verified: {existing_plan.name}")
 
         db.commit()
         print("\n✅ FitSphere Development Seeding Completed Successfully!")

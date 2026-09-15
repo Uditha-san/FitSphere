@@ -53,7 +53,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           { id: 'gyms', label: 'Gyms & Tenants', icon: <Building2 className="h-4 w-4" />, isPlaceholder: true, badge: 'Soon' },
           { id: 'users', label: 'User Directory', icon: <Users className="h-4 w-4" />, isPlaceholder: true, badge: 'Soon' },
           { id: 'assignments', label: 'Coach Assignments', icon: <UserCheck className="h-4 w-4" /> },
-          { id: 'workouts', label: 'Workouts & Plans', icon: <Dumbbell className="h-4 w-4" />, isPlaceholder: true, badge: 'Soon' },
+          { id: 'workouts', label: 'Platform Training Plans', icon: <Dumbbell className="h-4 w-4" /> },
           { id: 'reports', label: 'Platform Reports', icon: <BarChart3 className="h-4 w-4" />, isPlaceholder: true, badge: 'Soon' },
         ]
 
@@ -61,7 +61,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         return [
           { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="h-4 w-4" /> },
           { id: 'assignments', label: 'Coach-Client Pairings', icon: <UserCheck className="h-4 w-4" /> },
-          { id: 'workouts', label: 'Workouts & Plans', icon: <Dumbbell className="h-4 w-4" />, isPlaceholder: true, badge: 'Soon' },
+          { id: 'workouts', label: 'Training Plans & Workouts', icon: <Dumbbell className="h-4 w-4" /> },
           { id: 'reports', label: 'Gym Reports', icon: <BarChart3 className="h-4 w-4" />, isPlaceholder: true, badge: 'Soon' },
           { id: 'settings', label: 'Gym Settings', icon: <Settings className="h-4 w-4" />, isPlaceholder: true, badge: 'Soon' },
         ]
@@ -70,7 +70,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         return [
           { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="h-4 w-4" /> },
           { id: 'assignments', label: 'My Athletes & Clients', icon: <Users className="h-4 w-4" /> },
-          { id: 'workouts', label: 'Workouts & Plans', icon: <Dumbbell className="h-4 w-4" />, isPlaceholder: true, badge: 'Soon' },
+          { id: 'workouts', label: 'Training Plans', icon: <Dumbbell className="h-4 w-4" /> },
           { id: 'schedule', label: 'Schedule & Sessions', icon: <Calendar className="h-4 w-4" />, isPlaceholder: true, badge: 'Soon' },
           { id: 'progress', label: 'Client Progress', icon: <TrendingUp className="h-4 w-4" />, isPlaceholder: true, badge: 'Soon' },
           { id: 'profile', label: 'My Profile', icon: <UserIcon className="h-4 w-4" />, isPlaceholder: true, badge: 'Soon' },
@@ -81,7 +81,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         return [
           { id: 'dashboard', label: 'Dashboard', icon: <LayoutDashboard className="h-4 w-4" /> },
           { id: 'assignments', label: 'My Personal Trainer', icon: <Award className="h-4 w-4" /> },
-          { id: 'workouts', label: 'My Training Plans', icon: <Dumbbell className="h-4 w-4" />, isPlaceholder: true, badge: 'Soon' },
+          { id: 'workouts', label: 'My Training Plan', icon: <Dumbbell className="h-4 w-4" /> },
           { id: 'schedule', label: 'Schedule & Sessions', icon: <Calendar className="h-4 w-4" />, isPlaceholder: true, badge: 'Soon' },
           { id: 'videos', label: 'Workout Videos', icon: <PlaySquare className="h-4 w-4" />, isPlaceholder: true, badge: 'Soon' },
           { id: 'progress', label: 'My Progress', icon: <TrendingUp className="h-4 w-4" />, isPlaceholder: true, badge: 'Soon' },
