@@ -239,3 +239,5 @@ class TrainingPlanApiService {
 }
 
 export const trainingPlanApiService = new TrainingPlanApiService()
+export const trainingPlanApi = trainingPlanApiService
+export default trainingPlanApiService

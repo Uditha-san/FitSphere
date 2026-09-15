@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import {
-  Calendar,
   TrendingUp,
   PlaySquare,
   BarChart3,
@@ -18,6 +17,7 @@ import ClientDashboard from './features/dashboard/ClientDashboard'
 import SuperAdminDashboard from './features/dashboard/SuperAdminDashboard'
 import AssignmentsView from './features/assignments/AssignmentsView'
 import TrainingPlansView from './features/training-plans/TrainingPlansView'
+import SessionsView from './features/sessions/SessionsView'
 import DevToolsView from './features/dev/DevToolsView'
 import FeaturePlaceholder from './features/common/FeaturePlaceholder'
 
@@ -62,13 +62,7 @@ function MainApp() {
         return <TrainingPlansView />
 
       case 'schedule':
-        return (
-          <FeaturePlaceholder
-            title="Schedule & Sessions"
-            description="Manage training session bookings, gym calendar, personal trainer slots, and athlete attendance tracking."
-            icon={<Calendar className="h-8 w-8" />}
-          />
-        )
+        return <SessionsView />
 
       case 'progress':
         return (

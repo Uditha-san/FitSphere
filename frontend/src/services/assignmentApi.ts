@@ -131,4 +131,5 @@ class AssignmentApiService {
 }
 
 export const assignmentApiService = new AssignmentApiService()
+export const assignmentApi = assignmentApiService
 export default assignmentApiService
