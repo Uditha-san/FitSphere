@@ -6,8 +6,8 @@ import {
   Calendar,
   ArrowRight,
   Loader2,
-  Sparkles,
   Mail,
+  TrendingUp,
 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { assignmentApiService } from '../../services/assignmentApi'
@@ -97,15 +97,20 @@ export const CoachDashboard: React.FC<CoachDashboardProps> = ({ onNavigate }) =>
           <div className="text-[11px] text-emerald-400/90">Currently active pairings</div>
         </div>
 
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 space-y-3 shadow-lg">
+        <div
+          onClick={() => onNavigate('progress')}
+          className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 space-y-3 shadow-lg hover:border-slate-700 transition cursor-pointer"
+        >
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-xs font-medium">Training Programs</span>
+            <span className="text-xs font-medium">Progress Tracking</span>
             <div className="h-8 w-8 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center">
-              <Sparkles className="h-4 w-4" />
+              <TrendingUp className="h-4 w-4" />
             </div>
           </div>
-          <div className="text-2xl font-bold text-white">Coming Soon</div>
-          <div className="text-[11px] text-slate-500">Next implementation domain</div>
+          <div className="text-2xl font-bold text-white flex items-center gap-2">
+            Track Metrics <ArrowRight className="h-4 w-4 text-purple-400" />
+          </div>
+          <div className="text-[11px] text-purple-400/90">Body composition & measurements</div>
         </div>
       </div>
 

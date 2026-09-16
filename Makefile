@@ -33,6 +33,7 @@ test-backend:
 	PYTHONPATH=backend ./backend/.venv/bin/python -c "import app.main, app.core.security; print('All backend modules loaded cleanly!')"
 
 test-all:
+	PYTHONPATH=backend ./backend/.venv/bin/python backend/tests/test_progress.py
 	PYTHONPATH=backend ./backend/.venv/bin/python backend/tests/test_sessions.py
 	PYTHONPATH=backend ./backend/.venv/bin/python backend/tests/test_training_plans.py
 	PYTHONPATH=backend ./backend/.venv/bin/python backend/tests/test_coach_client_assignment.py

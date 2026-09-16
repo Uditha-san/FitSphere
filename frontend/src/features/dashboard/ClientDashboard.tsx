@@ -160,8 +160,8 @@ export const ClientDashboard: React.FC<ClientDashboardProps> = ({ onNavigate }) 
                   <Dumbbell className="h-4 w-4 text-cyan-400" />
                   <span>My Training Plans</span>
                 </div>
-                <span className="text-[10px] text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded">
-                  Coming soon
+                <span className="text-[10px] text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded font-medium">
+                  Live
                 </span>
               </div>
 
@@ -173,8 +173,8 @@ export const ClientDashboard: React.FC<ClientDashboardProps> = ({ onNavigate }) 
                   <Clock className="h-4 w-4 text-emerald-400" />
                   <span>Schedule & Sessions</span>
                 </div>
-                <span className="text-[10px] text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded">
-                  Coming soon
+                <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded font-medium">
+                  Live
                 </span>
               </div>
 
@@ -186,8 +186,8 @@ export const ClientDashboard: React.FC<ClientDashboardProps> = ({ onNavigate }) 
                   <TrendingUp className="h-4 w-4 text-amber-400" />
                   <span>My Progress & Stats</span>
                 </div>
-                <span className="text-[10px] text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded">
-                  Coming soon
+                <span className="text-[10px] text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded font-medium">
+                  Live
                 </span>
               </div>
             </div>

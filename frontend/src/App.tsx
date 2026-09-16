@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import {
-  TrendingUp,
   PlaySquare,
   BarChart3,
   Settings,
@@ -18,6 +17,7 @@ import SuperAdminDashboard from './features/dashboard/SuperAdminDashboard'
 import AssignmentsView from './features/assignments/AssignmentsView'
 import TrainingPlansView from './features/training-plans/TrainingPlansView'
 import SessionsView from './features/sessions/SessionsView'
+import ProgressView from './features/progress/ProgressView'
 import DevToolsView from './features/dev/DevToolsView'
 import FeaturePlaceholder from './features/common/FeaturePlaceholder'
 
@@ -65,13 +65,7 @@ function MainApp() {
         return <SessionsView />
 
       case 'progress':
-        return (
-          <FeaturePlaceholder
-            title="Athlete Progress Tracking"
-            description="Log workout weights, monitor volume trends, track body composition, and celebrate strength milestones."
-            icon={<TrendingUp className="h-8 w-8" />}
-          />
-        )
+        return <ProgressView />
 
       case 'videos':
         return (
