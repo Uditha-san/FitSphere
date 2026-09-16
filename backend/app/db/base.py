@@ -2,6 +2,7 @@
 from app.common.models.base import Base, TimestampMixin
 from app.common.models.tenant import TenantMixin
 from app.modules.assignments.models import CoachClientAssignment
+from app.modules.exercises.models import Exercise, ExerciseVideo, Difficulty, ExerciseType
 from app.modules.progress.models import ProgressRecord
 from app.modules.sessions.models import TrainingSession, SessionStatus, SessionType
 from app.modules.tenants.models import Tenant
@@ -24,5 +25,9 @@ __all__ = [
     "SessionStatus",
     "SessionType",
     "ProgressRecord",
+    "Exercise",
+    "ExerciseVideo",
+    "Difficulty",
+    "ExerciseType",
 ]
 

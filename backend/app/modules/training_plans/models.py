@@ -16,6 +16,7 @@ from app.common.models.base import Base, TimestampMixin
 if TYPE_CHECKING:
     from app.modules.tenants.models import Tenant
     from app.modules.users.models import User
+    from app.modules.exercises.models import Exercise
 
 
 class PlanStatus(str, enum.Enum):
@@ -208,6 +209,12 @@ class WorkoutExercise(Base, TimestampMixin):
         default=0,
         nullable=False
     )
+    exercise_id: Mapped[Optional[str]] = mapped_column(
+        String(36),
+        ForeignKey("exercises.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True
+    )
 
     # Relationships
     workout_day: Mapped["WorkoutDay"] = relationship(
@@ -215,6 +222,10 @@ class WorkoutExercise(Base, TimestampMixin):
         back_populates="exercises"
     )
     tenant: Mapped["Tenant"] = relationship("Tenant")
+    exercise: Mapped[Optional["Exercise"]] = relationship(
+        "Exercise",
+        back_populates="workout_exercises"
+    )
 
     __table_args__ = (
         Index("ix_workout_exercises_day_order", "workout_day_id", "order_index"),

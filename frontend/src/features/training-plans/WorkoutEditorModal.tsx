@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
-import { X, Dumbbell, Calendar, Loader2, AlertCircle } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { X, Dumbbell, Calendar, Loader2, AlertCircle, Sparkles } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
 import { trainingPlanApiService } from '../../services/trainingPlanApi'
+import { exerciseApi } from '../../services/exerciseApi'
 import type { WorkoutDay, WorkoutExercise } from '../../types/trainingPlan'
+import type { Exercise } from '../../types/exercise'
 
 interface AddDayModalProps {
   isOpen: boolean
@@ -105,12 +107,12 @@ export const AddDayModal: React.FC<AddDayModalProps> = ({
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-300">Description / Focus</label>
-            <input
-              type="text"
+            <label className="text-xs font-semibold text-slate-300">Focus / Warm-Up Notes</label>
+            <textarea
+              rows={2}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="e.g. Primary focus on chest & shoulder pressing power"
+              placeholder="e.g. 5 min light rowing, dynamic shoulder mobility"
               className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
             />
           </div>
@@ -151,6 +153,8 @@ export const AddExerciseModal: React.FC<AddExerciseModalProps> = ({
   onSuccess,
 }) => {
   const { token } = useAuth()
+  const [libraryExercises, setLibraryExercises] = useState<Exercise[]>([])
+  const [selectedExerciseId, setSelectedExerciseId] = useState<string>('')
   const [exerciseName, setExerciseName] = useState('')
   const [sets, setSets] = useState<number>(3)
   const [repetitions, setRepetitions] = useState('10')
@@ -159,7 +163,32 @@ export const AddExerciseModal: React.FC<AddExerciseModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  useEffect(() => {
+    if (isOpen && token) {
+      exerciseApi
+        .listExercises({ is_active: true, limit: 150 }, token)
+        .then((data) => setLibraryExercises(data))
+        .catch(() => {})
+    }
+  }, [isOpen, token])
+
   if (!isOpen) return null
+
+  const handleLibrarySelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const exId = e.target.value
+    setSelectedExerciseId(exId)
+    if (!exId) return
+
+    const match = libraryExercises.find((x) => x.id === exId)
+    if (match) {
+      setExerciseName(match.name)
+      if (!notes && match.description) {
+        setNotes(match.description)
+      }
+    }
+  }
+
+  const selectedLibExercise = libraryExercises.find((x) => x.id === selectedExerciseId)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -176,6 +205,7 @@ export const AddExerciseModal: React.FC<AddExerciseModalProps> = ({
         dayId,
         {
           exercise_name: exerciseName.trim(),
+          exercise_id: selectedExerciseId || undefined,
           sets: Number(sets) || 3,
           repetitions: repetitions.trim() || '10',
           rest_seconds: Number(restSeconds) || 60,
@@ -215,13 +245,45 @@ export const AddExerciseModal: React.FC<AddExerciseModalProps> = ({
         )}
 
         <form onSubmit={handleSubmit} className="space-y-3.5">
+          {/* Choose from Library Dropdown */}
+          <div className="space-y-1">
+            <label className="text-xs font-semibold text-slate-300 flex items-center justify-between">
+              <span>Choose from Library</span>
+              <span className="text-[10px] text-emerald-400 font-normal">Auto-links video tutorial</span>
+            </label>
+            <select
+              value={selectedExerciseId}
+              onChange={handleLibrarySelect}
+              className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3.5 py-2 text-xs text-white focus:outline-none focus:border-indigo-500"
+            >
+              <option value="">-- Custom Exercise (Not in Library) --</option>
+              {libraryExercises.map((ex) => (
+                <option key={ex.id} value={ex.id}>
+                  {ex.name} ({ex.muscle_group}) {ex.videos_count > 0 ? '🎬' : ''}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {selectedLibExercise && (
+            <div className="flex items-center gap-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 text-[11px] text-emerald-400">
+              <Sparkles className="h-3 w-3" />
+              <span>Linked to Exercise Library {selectedLibExercise.videos_count > 0 ? '• Video Tutorial Available' : ''}</span>
+            </div>
+          )}
+
           <div className="space-y-1">
             <label className="text-xs font-semibold text-slate-300">Exercise Name *</label>
             <input
               type="text"
               required
               value={exerciseName}
-              onChange={(e) => setExerciseName(e.target.value)}
+              onChange={(e) => {
+                setExerciseName(e.target.value)
+                if (selectedExerciseId && selectedLibExercise && e.target.value !== selectedLibExercise.name) {
+                  setSelectedExerciseId('')
+                }
+              }}
               placeholder="e.g. Barbell Bench Press"
               className="w-full rounded-xl bg-slate-950 border border-slate-800 px-3.5 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500"
             />

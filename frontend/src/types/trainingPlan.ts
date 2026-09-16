@@ -1,4 +1,5 @@
 import type { User } from './auth'
+import type { Exercise } from './exercise'
 
 export type PlanStatus = 'draft' | 'active' | 'completed' | 'archived'
 
@@ -6,6 +7,7 @@ export interface WorkoutExercise {
   id: string
   workout_day_id: string
   tenant_id: string
+  exercise_id?: string | null
   exercise_name: string
   description?: string | null
   sets: number
@@ -16,6 +18,7 @@ export interface WorkoutExercise {
   order_index: number
   created_at: string
   updated_at: string
+  exercise?: Exercise | null
 }
 
 export interface WorkoutDay {
@@ -99,6 +102,7 @@ export interface WorkoutDayUpdatePayload {
 
 export interface WorkoutExerciseCreatePayload {
   exercise_name: string
+  exercise_id?: string | null
   description?: string
   sets: number
   repetitions: string
@@ -110,6 +114,7 @@ export interface WorkoutExerciseCreatePayload {
 
 export interface WorkoutExerciseUpdatePayload {
   exercise_name?: string
+  exercise_id?: string | null
   description?: string
   sets?: number
   repetitions?: string

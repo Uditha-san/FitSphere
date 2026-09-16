@@ -21,9 +21,10 @@ import TrainingPlanStatusBadge from './TrainingPlanStatusBadge'
 import WorkoutCard from './WorkoutCard'
 import CreateTrainingPlanModal from './CreateTrainingPlanModal'
 import { AddDayModal, AddExerciseModal } from './WorkoutEditorModal'
+import { ExerciseDetailsModal } from '../exercises/ExerciseDetailsModal'
 
 export const CoachTrainingPlansView: React.FC = () => {
-  const { token } = useAuth()
+  const { user, token } = useAuth()
   const [plans, setPlans] = useState<TrainingPlanSummary[]>([])
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null)
   const [selectedPlan, setSelectedPlan] = useState<TrainingPlan | null>(null)
@@ -35,6 +36,7 @@ export const CoachTrainingPlansView: React.FC = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [isAddDayOpen, setIsAddDayOpen] = useState(false)
   const [activeDayIdForExercise, setActiveDayIdForExercise] = useState<string | null>(null)
+  const [viewingTechniqueId, setViewingTechniqueId] = useState<string | null>(null)
 
   const loadPlans = useCallback(async () => {
     if (!token) return
@@ -251,6 +253,7 @@ export const CoachTrainingPlansView: React.FC = () => {
                       onAddExercise={(dayId) => setActiveDayIdForExercise(dayId)}
                       onDeleteDay={handleDeleteDay}
                       onDeleteExercise={handleDeleteExercise}
+                      onViewExerciseTechnique={(exId) => setViewingTechniqueId(exId)}
                     />
                   ))}
                 </div>
@@ -278,6 +281,17 @@ export const CoachTrainingPlansView: React.FC = () => {
             onSuccess={() => {
               if (selectedPlanId) loadPlanDetails(selectedPlanId)
             }}
+          />
+        )}
+
+        {/* Exercise Technique Modal */}
+        {viewingTechniqueId && (
+          <ExerciseDetailsModal
+            isOpen={!!viewingTechniqueId}
+            exerciseId={viewingTechniqueId}
+            currentUser={user}
+            token={token}
+            onClose={() => setViewingTechniqueId(null)}
           />
         )}
       </div>

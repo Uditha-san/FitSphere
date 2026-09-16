@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 
 from app.common.services.base import BaseService
 from app.modules.assignments.repository import assignment_repository
+from app.modules.exercises.repository import exercise_repository
 from app.modules.training_plans.models import (
     PlanStatus,
     TrainingPlan,
@@ -322,9 +323,28 @@ class TrainingPlanService(BaseService[TrainingPlan, TrainingPlanRepository]):
         plan = self.repository.get(db, id=day.training_plan_id)
         self._check_modification_access(plan, acting_user)
 
+        if exercise_in.exercise_id:
+            lib_ex = exercise_repository.get(db, id=exercise_in.exercise_id)
+            if not lib_ex:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Referenced library exercise not found",
+                )
+            if not lib_ex.is_active:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Cannot add inactive exercise to workout",
+                )
+            if lib_ex.tenant_id is not None and lib_ex.tenant_id != day.tenant_id:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Cannot link exercise from another gym",
+                )
+
         data = {
             "workout_day_id": day.id,
             "tenant_id": day.tenant_id,
+            "exercise_id": exercise_in.exercise_id,
             "exercise_name": exercise_in.exercise_name,
             "description": exercise_in.description,
             "sets": exercise_in.sets,
@@ -353,6 +373,24 @@ class TrainingPlanService(BaseService[TrainingPlan, TrainingPlanRepository]):
         day = self.repository.get_day(db, id=exercise.workout_day_id)
         plan = self.repository.get(db, id=day.training_plan_id)
         self._check_modification_access(plan, acting_user)
+
+        if exercise_in.exercise_id is not None:
+            lib_ex = exercise_repository.get(db, id=exercise_in.exercise_id)
+            if not lib_ex:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Referenced library exercise not found",
+                )
+            if not lib_ex.is_active:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Cannot link inactive exercise to workout",
+                )
+            if lib_ex.tenant_id is not None and lib_ex.tenant_id != day.tenant_id:
+                raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN,
+                    detail="Cannot link exercise from another gym",
+                )
 
         return self.repository.update_exercise(db, db_obj=exercise, obj_in=exercise_in)
 

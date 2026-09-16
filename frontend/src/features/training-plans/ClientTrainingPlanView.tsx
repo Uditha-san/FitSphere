@@ -15,13 +15,15 @@ import type {
 } from '../../types/trainingPlan'
 import TrainingPlanStatusBadge from './TrainingPlanStatusBadge'
 import WorkoutCard from './WorkoutCard'
+import { ExerciseDetailsModal } from '../exercises/ExerciseDetailsModal'
 
 export const ClientTrainingPlanView: React.FC = () => {
-  const { token } = useAuth()
+  const { user, token } = useAuth()
   const [plans, setPlans] = useState<TrainingPlanSummary[]>([])
   const [activePlan, setActivePlan] = useState<TrainingPlan | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
+  const [viewingTechniqueId, setViewingTechniqueId] = useState<string | null>(null)
 
   const loadClientPlans = useCallback(async () => {
     if (!token) return
@@ -198,11 +200,26 @@ export const ClientTrainingPlanView: React.FC = () => {
             ) : (
               <div className="space-y-4">
                 {activePlan.workout_days.map((day: WorkoutDay) => (
-                  <WorkoutCard key={day.id} day={day} canEdit={false} />
+                  <WorkoutCard
+                    key={day.id}
+                    day={day}
+                    canEdit={false}
+                    onViewExerciseTechnique={(exId) => setViewingTechniqueId(exId)}
+                  />
                 ))}
               </div>
             )}
           </div>
+
+          {viewingTechniqueId && (
+            <ExerciseDetailsModal
+              exerciseId={viewingTechniqueId}
+              currentUser={user}
+              token={token}
+              onClose={() => setViewingTechniqueId(null)}
+              onAddVideo={() => {}}
+            />
+          )}
         </div>
       )}
     </div>

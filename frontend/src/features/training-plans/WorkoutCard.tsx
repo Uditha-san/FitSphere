@@ -7,6 +7,7 @@ import {
   Repeat,
   Layers,
   FileText,
+  Film,
 } from 'lucide-react'
 import type { WorkoutDay, WorkoutExercise } from '../../types/trainingPlan'
 
@@ -16,6 +17,7 @@ interface WorkoutCardProps {
   onAddExercise?: (dayId: string) => void
   onDeleteDay?: (dayId: string) => void
   onDeleteExercise?: (exerciseId: string) => void
+  onViewExerciseTechnique?: (exerciseId: string) => void
 }
 
 export const WorkoutCard: React.FC<WorkoutCardProps> = ({
@@ -24,6 +26,7 @@ export const WorkoutCard: React.FC<WorkoutCardProps> = ({
   onAddExercise,
   onDeleteDay,
   onDeleteExercise,
+  onViewExerciseTechnique,
 }) => {
   return (
     <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 shadow-lg space-y-4">
@@ -110,6 +113,17 @@ export const WorkoutCard: React.FC<WorkoutCardProps> = ({
                   <Clock className="h-3 w-3 text-amber-400" />
                   <span>{exercise.rest_seconds}s rest</span>
                 </div>
+
+                {exercise.exercise_id && onViewExerciseTechnique && (
+                  <button
+                    onClick={() => onViewExerciseTechnique(exercise.exercise_id!)}
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-[11px] font-medium text-emerald-400 hover:bg-emerald-500/20 transition cursor-pointer"
+                    title="View technique tutorial video"
+                  >
+                    <Film className="h-3 w-3" />
+                    <span>Technique</span>
+                  </button>
+                )}
 
                 {canEdit && onDeleteExercise && (
                   <button

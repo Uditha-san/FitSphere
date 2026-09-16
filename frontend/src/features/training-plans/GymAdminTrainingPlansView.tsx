@@ -16,11 +16,13 @@ import type {
 } from '../../types/trainingPlan'
 import TrainingPlanStatusBadge from './TrainingPlanStatusBadge'
 import WorkoutCard from './WorkoutCard'
+import { ExerciseDetailsModal } from '../exercises/ExerciseDetailsModal'
 
 export const GymAdminTrainingPlansView: React.FC = () => {
-  const { token } = useAuth()
+  const { user, token } = useAuth()
   const [plans, setPlans] = useState<TrainingPlanSummary[]>([])
   const [selectedPlan, setSelectedPlan] = useState<TrainingPlan | null>(null)
+  const [viewingTechniqueId, setViewingTechniqueId] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -245,12 +247,28 @@ export const GymAdminTrainingPlansView: React.FC = () => {
                 </div>
               ) : (
                 selectedPlan.workout_days.map((day: WorkoutDay) => (
-                  <WorkoutCard key={day.id} day={day} canEdit={false} />
+                  <WorkoutCard
+                    key={day.id}
+                    day={day}
+                    canEdit={false}
+                    onViewExerciseTechnique={(exId) => setViewingTechniqueId(exId)}
+                  />
                 ))
               )}
             </div>
           </div>
         </div>
+      )}
+
+      {/* Exercise Technique Modal */}
+      {viewingTechniqueId && (
+        <ExerciseDetailsModal
+          isOpen={!!viewingTechniqueId}
+          exerciseId={viewingTechniqueId}
+          currentUser={user}
+          token={token}
+          onClose={() => setViewingTechniqueId(null)}
+        />
       )}
     </div>
   )

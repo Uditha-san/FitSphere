@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import {
-  PlaySquare,
   BarChart3,
   Settings,
   User as UserIcon,
@@ -18,6 +17,7 @@ import AssignmentsView from './features/assignments/AssignmentsView'
 import TrainingPlansView from './features/training-plans/TrainingPlansView'
 import SessionsView from './features/sessions/SessionsView'
 import ProgressView from './features/progress/ProgressView'
+import { ExerciseLibraryView } from './features/exercises/ExerciseLibraryView'
 import DevToolsView from './features/dev/DevToolsView'
 import FeaturePlaceholder from './features/common/FeaturePlaceholder'
 
@@ -67,14 +67,9 @@ function MainApp() {
       case 'progress':
         return <ProgressView />
 
+      case 'exercises':
       case 'videos':
-        return (
-          <FeaturePlaceholder
-            title="Exercise Video Library"
-            description="Browse HD form tutorials, movement technique demonstrations, and coach-uploaded video instructions."
-            icon={<PlaySquare className="h-8 w-8" />}
-          />
-        )
+        return <ExerciseLibraryView />
 
       case 'reports':
         return (

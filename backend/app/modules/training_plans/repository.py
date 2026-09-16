@@ -3,6 +3,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
 from app.common.repositories.base import BaseRepository
+from app.modules.exercises.models import Exercise
 from app.modules.training_plans.models import (
     TrainingPlan,
     WorkoutDay,
@@ -27,7 +28,10 @@ class TrainingPlanRepository(
             .options(
                 selectinload(TrainingPlan.coach),
                 selectinload(TrainingPlan.client),
-                selectinload(TrainingPlan.workout_days).selectinload(WorkoutDay.exercises),
+                selectinload(TrainingPlan.workout_days)
+                .selectinload(WorkoutDay.exercises)
+                .selectinload(WorkoutExercise.exercise)
+                .selectinload(Exercise.videos),
             )
             .where(TrainingPlan.id == id)
         )
@@ -72,7 +76,11 @@ class TrainingPlanRepository(
     def get_day(self, db: Session, id: str) -> Optional[WorkoutDay]:
         stmt = (
             select(WorkoutDay)
-            .options(selectinload(WorkoutDay.exercises))
+            .options(
+                selectinload(WorkoutDay.exercises)
+                .selectinload(WorkoutExercise.exercise)
+                .selectinload(Exercise.videos)
+            )
             .where(WorkoutDay.id == id)
         )
         return db.execute(stmt).scalars().first()
@@ -107,7 +115,14 @@ class TrainingPlanRepository(
     # --- Workout Exercise Operations ---
 
     def get_exercise(self, db: Session, id: str) -> Optional[WorkoutExercise]:
-        stmt = select(WorkoutExercise).where(WorkoutExercise.id == id)
+        stmt = (
+            select(WorkoutExercise)
+            .options(
+                selectinload(WorkoutExercise.exercise)
+                .selectinload(Exercise.videos)
+            )
+            .where(WorkoutExercise.id == id)
+        )
         return db.execute(stmt).scalars().first()
 
     def create_exercise(self, db: Session, *, obj_in: Dict[str, Any]) -> WorkoutExercise:

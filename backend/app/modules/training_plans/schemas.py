@@ -3,12 +3,14 @@ from typing import List, Optional
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.modules.assignments.schemas import UserSummary
+from app.modules.exercises.schemas import ExerciseBrief
 
 
 # --- Exercise Schemas ---
 
 class WorkoutExerciseBase(BaseModel):
     exercise_name: str = Field(..., min_length=1, max_length=255, description="Name of the exercise")
+    exercise_id: Optional[str] = Field(None, description="Optional UUID reference to library exercise")
     description: Optional[str] = Field(None, max_length=500, description="Exercise technique instructions")
     sets: int = Field(default=3, ge=1, le=50, description="Target number of sets")
     repetitions: str = Field(default="10", min_length=1, max_length=50, description="Target reps (e.g. 10, 8-12, AMRAP)")
@@ -24,6 +26,7 @@ class WorkoutExerciseCreate(WorkoutExerciseBase):
 
 class WorkoutExerciseUpdate(BaseModel):
     exercise_name: Optional[str] = Field(None, min_length=1, max_length=255)
+    exercise_id: Optional[str] = None
     description: Optional[str] = Field(None, max_length=500)
     sets: Optional[int] = Field(None, ge=1, le=50)
     repetitions: Optional[str] = Field(None, min_length=1, max_length=50)
@@ -39,6 +42,7 @@ class WorkoutExerciseRead(WorkoutExerciseBase):
     tenant_id: str
     created_at: datetime
     updated_at: datetime
+    exercise: Optional[ExerciseBrief] = None
 
     model_config = ConfigDict(from_attributes=True)
 
