@@ -4,6 +4,7 @@ from app.modules.assignments.router import router as assignments_router
 from app.modules.auth.router import router as auth_router
 from app.modules.exercises.router import router as exercises_router
 from app.modules.progress.router import router as progress_router
+from app.modules.reports.router import router as reports_router
 from app.modules.sessions.router import router as sessions_router
 from app.modules.tenants.router import router as tenants_router
 from app.modules.training_plans.router import router as training_plans_router
@@ -20,6 +21,7 @@ api_router.include_router(training_plans_router, prefix="/training-plans", tags=
 api_router.include_router(sessions_router, prefix="/sessions", tags=["Schedule & Sessions"])
 api_router.include_router(progress_router, prefix="/progress", tags=["Progress Tracking"])
 api_router.include_router(exercises_router, prefix="/exercises", tags=["Exercises & Video Library"])
+api_router.include_router(reports_router, prefix="/reports", tags=["Reports & Analytics"])
 
 
 

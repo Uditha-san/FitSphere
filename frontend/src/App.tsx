@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import {
-  BarChart3,
   Settings,
   User as UserIcon,
   Building2,
@@ -18,6 +17,7 @@ import TrainingPlansView from './features/training-plans/TrainingPlansView'
 import SessionsView from './features/sessions/SessionsView'
 import ProgressView from './features/progress/ProgressView'
 import { ExerciseLibraryView } from './features/exercises/ExerciseLibraryView'
+import ReportsView from './features/reports/ReportsView'
 import DevToolsView from './features/dev/DevToolsView'
 import FeaturePlaceholder from './features/common/FeaturePlaceholder'
 
@@ -72,13 +72,7 @@ function MainApp() {
         return <ExerciseLibraryView />
 
       case 'reports':
-        return (
-          <FeaturePlaceholder
-            title="Gym Analytics & Reports"
-            description="Comprehensive gym revenue, coach utilization rates, membership retention, and attendance reports."
-            icon={<BarChart3 className="h-8 w-8" />}
-          />
-        )
+        return <ReportsView />
 
       case 'settings':
         return (

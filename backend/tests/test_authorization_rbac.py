@@ -153,7 +153,7 @@ def run_tests():
         print("\n=== TENANT AUTHORIZATION TESTS ===")
 
         # Test 1: super_admin can list tenants
-        res = client.get("/api/v1/tenants/", headers=auth_header(super_admin.id))
+        res = client.get("/api/v1/tenants/?limit=500", headers=auth_header(super_admin.id))
         assert res.status_code == 200, f"Expected 200, got {res.status_code}: {res.text}"
         tenant_ids = [t["id"] for t in res.json()]
         assert gym_a.id in tenant_ids and gym_b.id in tenant_ids

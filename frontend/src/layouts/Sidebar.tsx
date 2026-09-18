@@ -57,7 +57,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           { id: 'exercises', label: 'Exercise & Video Library', icon: <Film className="h-4 w-4" /> },
           { id: 'schedule', label: 'Platform Sessions', icon: <Calendar className="h-4 w-4" /> },
           { id: 'progress', label: 'Platform Progress', icon: <TrendingUp className="h-4 w-4" /> },
-          { id: 'reports', label: 'Platform Reports', icon: <BarChart3 className="h-4 w-4" />, isPlaceholder: true, badge: 'Soon' },
+          { id: 'reports', label: 'Platform Reports', icon: <BarChart3 className="h-4 w-4" /> },
         ]
 
       case 'gym_admin':
@@ -68,7 +68,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           { id: 'exercises', label: 'Exercise & Video Library', icon: <Film className="h-4 w-4" /> },
           { id: 'schedule', label: 'Schedule & Sessions', icon: <Calendar className="h-4 w-4" /> },
           { id: 'progress', label: 'Client Progress', icon: <TrendingUp className="h-4 w-4" /> },
-          { id: 'reports', label: 'Gym Reports', icon: <BarChart3 className="h-4 w-4" />, isPlaceholder: true, badge: 'Soon' },
+          { id: 'reports', label: 'Gym Reports', icon: <BarChart3 className="h-4 w-4" /> },
           { id: 'settings', label: 'Gym Settings', icon: <Settings className="h-4 w-4" />, isPlaceholder: true, badge: 'Soon' },
         ]
 
@@ -80,6 +80,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           { id: 'exercises', label: 'Exercise Library & Videos', icon: <Film className="h-4 w-4" /> },
           { id: 'schedule', label: 'Schedule & Sessions', icon: <Calendar className="h-4 w-4" /> },
           { id: 'progress', label: 'Client Progress', icon: <TrendingUp className="h-4 w-4" /> },
+          { id: 'reports', label: 'Coach & Roster Reports', icon: <BarChart3 className="h-4 w-4" /> },
           { id: 'profile', label: 'My Profile', icon: <UserIcon className="h-4 w-4" />, isPlaceholder: true, badge: 'Soon' },
         ]
 
@@ -92,6 +93,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           { id: 'exercises', label: 'Exercise Videos & Library', icon: <Film className="h-4 w-4" /> },
           { id: 'schedule', label: 'Schedule & Sessions', icon: <Calendar className="h-4 w-4" /> },
           { id: 'progress', label: 'My Progress', icon: <TrendingUp className="h-4 w-4" /> },
+          { id: 'reports', label: 'My Fitness Reports', icon: <BarChart3 className="h-4 w-4" /> },
           { id: 'profile', label: 'My Profile', icon: <UserIcon className="h-4 w-4" />, isPlaceholder: true, badge: 'Soon' },
         ]
     }
